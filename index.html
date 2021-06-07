@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://kit.fontawesome.com/cf5d585932.js"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    />
+    <title>Movie Ratings</title>
+
+    <style>
+      .stars-outer {
+        position: relative;
+        display: inline-block;
+      }
+
+      .stars-inner {
+        position: absolute;
+        top: 0;
+        left: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        width: 0;
+      }
+
+      .stars-outer::before {
+        content: "\f005 \f005 \f005 \f005 \f005";
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        color: #ccc;
+      }
+      .stars-inner::before {
+        content: "\f005 \f005 \f005 \f005 \f005";
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        color: #f8ce0b;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h1 class="mb-5">Movie Ratings</h1>
+      <div class="form-group">
+        <select class="form-control custom-select" id="product-select">
+          <option value="0" selected disabled>Select Movie</option>
+          <option value="godfather">The Godfather</option>
+          <option value="darkknight">The Dark Knight</option>
+          <option value="lordrings">The Lord of the Rings</option>
+          <option value="fightclub">Fight Club</option>
+          <option value="inception">Inception</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <input
+          type="number"
+          id="rating-control"
+          class="form-control"
+          step="0.1"
+          max="5"
+          placeholder="Rate 1 - 5"
+          disabled
+        />
+      </div>
+
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Movie</th>
+            <th>Rating</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="godfather">
+            <td>The Godfather</td>
+            <td>
+              <div class="stars-outer">
+                <div class="stars-inner"></div>
+              </div>
+              <span class="number-rating"></span>
+            </td>
+          </tr>
+          <tr class="darkknight">
+            <td>The Dark Knight</td>
+            <td>
+              <div class="stars-outer">
+                <div class="stars-inner"></div>
+              </div>
+              <span class="number-rating"></span>
+            </td>
+          </tr>
+          <tr class="lordrings">
+            <td>Lord Of The Rings</td>
+            <td>
+              <div class="stars-outer">
+                <div class="stars-inner"></div>
+              </div>
+              <span class="number-rating"></span>
+            </td>
+          </tr>
+          <tr class="fightclub">
+            <td>Fight Club</td>
+            <td>
+              <div class="stars-outer">
+                <div class="stars-inner"></div>
+              </div>
+              <span class="number-rating"></span>
+            </td>
+          </tr>
+          <tr class="inception">
+            <td>Inception</td>
+            <td>
+              <div class="stars-outer">
+                <div class="stars-inner"></div>
+              </div>
+              <span class="number-rating"></span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      //initital ratig
+      const ratings = {
+        godfather: 4.7,
+        darkknight: 4.0,
+        lordrings: 3.5,
+        fightclub: 3.8,
+        inception: 4.1,
+      };
+
+      //total stars
+      const starsTotal = 5;
+
+      //run getRatings when DOM loads
+      document.addEventListener("DOMContentLoaded", getRatings);
+
+      //form elements
+      const productSelect = document.getElementById("product-select");
+      const ratingControl = document.getElementById("rating-control");
+
+      //init product
+      let product;
+
+      //product select change
+      productSelect.addEventListener("change", (e) => {
+        product = e.target.value;
+
+        //enable rating control
+        ratingControl.disabled = false;
+        ratingControl.value = ratings[product];
+      });
+
+      //rating control change
+      ratingControl.addEventListener("blur", (e) => {
+        const rating = e.target.value;
+
+        //make sure 5 or under
+        if (rating > 5) {
+          alert("Please rate 1-5");
+          return;
+        }
+
+        //change rating
+        ratings[product] = rating;
+
+        getRatings();
+      });
+
+      //get ratings
+      function getRatings() {
+        for (let rating in ratings) {
+          //get persentage
+          const starPercentage = (ratings[rating] / starsTotal) * 100;
+
+          //round to nearest 10
+          const starPercentageRounded = `${
+            Math.round(starPercentage / 10) * 10
+          }%`;
+
+          //set width of star inner to persentage
+          document.querySelector(`.${rating} .stars-inner`).style.width =
+            starPercentageRounded;
+
+          //add number rating
+          document.querySelector(`.${rating} .number-rating`).innerHTML =
+            ratings[rating];
+        }
+      }
+    </script>
+  </body>
+</html>
